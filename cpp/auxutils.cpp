@@ -34,4 +34,33 @@ double AuxUtils::dpi(QSizeF size)
 }
 
 // FIXME: properly implement this to be independent of the screen size and resolution
-int AuxUtils::s
+int AuxUtils::sp(int pixel, QSizeF size)
+{
+    //qDebug() << "Physical DPI:"  << QApplication::screens().first()->physicalDotsPerInch();
+    //qDebug() << "Logical DPI:"   << QApplication::screens().first()->logicalDotsPerInch();
+    //qDebug() << "Pixel ratio:"   << QApplication::screens().first()->devicePixelRatio();
+
+    // iPhone 7: 1.5
+    // iPad Mini 4: 1
+    // Android: 1
+    // Linux: 4
+    // iPad Pro: 1
+    // Raspberry Pi touch screen 7": 1
+
+    return int(pixel * (dpi(size) / 160) * qApp->devicePixelRatio());
+}
+
+QString AuxUtils::deviceInfo()
+{
+    QSysInfo info;
+
+    return  info.prettyProductName() + '\n' + '\n' +
+            QString::number(QThread::idealThreadCount()) + " " + tr("cores");
+}
+
+int AuxUtils::numberThreads()
+{
+    return QThread::idealThreadCount();
+}
+
+QString AuxUtils::qtVersion(
