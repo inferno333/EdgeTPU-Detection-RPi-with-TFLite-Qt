@@ -95,4 +95,32 @@ QImage AuxUtils::drawText(QImage image, QRectF rect, QString text, Qt::Alignment
         pen.setCapStyle(Qt::RoundCap);
         pen.setJoinStyle(Qt::RoundJoin);
 
-        // C
+        // Configure brush
+        brush.setStyle(Qt::SolidPattern);
+        brush.setColor(fontColor);
+
+        // Get lines
+        lines = text.split('\n',QString::SkipEmptyParts);
+
+        // Calculate text position
+        QFontMetrics fm(font);
+        for(int i=0;i<lines.count();i++)
+        {
+            // Calculate x0 and y0 positions
+            int x = ((r.width()) - fm.width(lines.at(i)))/2;
+            int y = pos == Qt::AlignBottom ? (r.height()) - fm.height()*(lines.count()-i) : (fm.height()*(i+1));
+
+            // Add text to path
+            path.addText(r.left()+x,r.top()+y,font,lines.at(i));
+        }
+
+        // Set pen, brush, font and draw path
+        p.setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);
+        p.setPen(pen);
+        p.setBrush(brush);
+        p.setFont(font);
+        p.drawPath(path);
+    }
+
+    return image;
+}
