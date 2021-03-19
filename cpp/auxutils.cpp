@@ -63,4 +63,36 @@ int AuxUtils::numberThreads()
     return QThread::idealThreadCount();
 }
 
-QString AuxUtils::qtVersion(
+QString AuxUtils::qtVersion()
+{
+    return qVersion();
+}
+
+QString AuxUtils::getAssetsPath()
+{
+    return assetsPath;
+}
+
+QImage AuxUtils::drawText(QImage image, QRectF rect, QString text, Qt::AlignmentFlag pos, Qt::GlobalColor borderColor, double borderSize, Qt::GlobalColor fontColor, QFont font)
+{
+    QPainter     p;
+    QRectF       r = rect;
+    QPainterPath path;
+    QPen         pen;
+    QBrush       brush;
+    QStringList  lines;
+
+    if (p.begin(&image))
+    {
+        // Configure font
+        font.setPixelSize(AuxUtils::sp(FONT_PIXEL_SIZE_TEXT,rect.size()));
+        font.setStyleHint(QFont::Times, QFont::PreferAntialias);
+
+        // Configure pen
+        pen.setWidthF(borderSize);
+        pen.setStyle(Qt::SolidLine);
+        pen.setColor(borderColor);
+        pen.setCapStyle(Qt::RoundCap);
+        pen.setJoinStyle(Qt::RoundJoin);
+
+        // C
