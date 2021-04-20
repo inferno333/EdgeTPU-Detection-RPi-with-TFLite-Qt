@@ -124,3 +124,32 @@ QImage AuxUtils::drawText(QImage image, QRectF rect, QString text, Qt::Alignment
 
     return image;
 }
+
+QImage AuxUtils::setOpacity(QImage& image, qreal opacity)
+{
+    QImage newImg(image.size(), QImage::Format_ARGB32);
+    newImg.fill(Qt::transparent);
+
+    QPainter painter(&newImg);
+    painter.setOpacity(opacity);
+    painter.drawImage(QRect(0, 0, image.width(), image.height()), image);
+
+    return newImg;
+}
+
+QImage AuxUtils::drawMasks(QImage image, QRect rect, QStringList captions, QList<double> confidences, QList<QRectF> boxes, QList<QImage> masks,
+                           double minConfidence, QMap<QString,bool> activeLabels)
+{
+    Q_UNUSED(captions);
+    Q_UNUSED(rect);
+
+    QPainter p;
+
+
+    if (p.begin(&image))
+    {
+        // http://doc.qt.io/qt-5/qpainter.html#CompositionMode-enum
+        p.setCompositionMode(QPainter::CompositionMode_SourceOver);
+
+        // Draw each mask
+        for(int i=0;i
