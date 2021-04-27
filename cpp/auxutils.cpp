@@ -152,4 +152,34 @@ QImage AuxUtils::drawMasks(QImage image, QRect rect, QStringList captions, QList
         p.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
         // Draw each mask
-        for(int i=0;i
+        for(int i=0;i<masks.count();i++)
+        {
+            // Check min confidence value and active label
+            if (confidences[i] >= minConfidence && activeLabels[captions[i]])
+            {
+                masks[i] = setOpacity(masks[i],MASK_OPACITY);
+                p.drawImage(boxes[i].topLeft(),masks[i]);
+            }
+        }
+    }
+    return image;
+}
+
+QPointF boxCenter(QRectF rect, int offsetX=0, int offsetY=0)
+{
+    return QPointF(rect.left() + rect.width()*0.5 + offsetX, rect.top() + rect.height()*0.5 + offsetY);
+}
+
+QRectF pointCircle(QPointF p, double radius)
+{
+    return QRectF(p.x()-radius,p.y()-radius,2*radius,2*radius);
+}
+
+QRectF pointRect(QPointF p, double width, double height)
+{
+    return QRectF(p.x()-0.5*width,p.y()-0.5*height,width,height);
+}
+
+QPointF midPoint(QPointF a, QPointF b)
+{
+    return QPointF(0.5*(a.x()+b.x()
