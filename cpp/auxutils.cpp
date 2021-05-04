@@ -210,4 +210,38 @@ QImage AuxUtils::drawBoxes(QImage image, QRect rect, QStringList captions, QList
 {
     Q_UNUSED(rect);
 
-   
+    ColorManager cm;
+    QPainter p;
+    QBrush   brush;
+    QPen     pen;
+    QFont    font;
+    QPen     fPen;
+    QBrush   bBrush;
+    QPen     bPen;
+
+    if (p.begin(&image))
+    {
+        // Configure pen
+        pen.setStyle(Qt::SolidLine);
+        pen.setWidthF(LINE_WIDTH);
+
+        // Configure font pen
+        fPen.setStyle(Qt::SolidLine);
+        fPen.setColor(Qt::black);
+
+        // Configure back pen
+        bPen.setStyle(Qt::SolidLine);
+
+        // Configure brush
+        brush.setStyle(Qt::NoBrush);
+
+        // Configure back brush
+        bBrush.setStyle(Qt::SolidPattern);
+
+        // Configure font
+        font.setCapitalization(QFont::Capitalize);
+        font.setPixelSize(AuxUtils::sp(FONT_PIXEL_SIZE_BOX,rect.size()));
+
+        // Configure painter
+        p.setRenderHint(QPainter::Antialiasing);
+        p.
