@@ -182,4 +182,32 @@ QRectF pointRect(QPointF p, double width, double height)
 
 QPointF midPoint(QPointF a, QPointF b)
 {
-    return QPointF(0.5*(a.x()+b.x()
+    return QPointF(0.5*(a.x()+b.x()),0.5*(a.y()+b.y()));
+}
+
+bool rectInside(QRectF a, QRectF b)
+{
+    return b.left()>=a.left() && b.top()>=a.top() && b.right()<=a.right() && b.bottom()<=a.bottom();
+}
+
+bool pointInside(QPointF p, QRectF r)
+{
+    return p.x()>=r.left() && p.x()<=r.right() && p.y()<=r.top() && p.y()>=r.bottom();
+}
+
+double getAngle(QPointF a, QPointF b)
+{
+    double angle = atan2(a.y()-b.y(),a.x()-b.x()) * 180 / M_PI;
+
+    // Check it is not: Nan, -Inf or +Inf
+    angle = angle != angle || angle > std::numeric_limits<qreal>::max() || angle < -std::numeric_limits<qreal>::max() ? 0 : angle;
+
+    return angle;
+}
+
+QImage AuxUtils::drawBoxes(QImage image, QRect rect, QStringList captions, QList<double> confidences, QList<QRectF> boxes, double minConfidence,
+                           QMap<QString, bool> activeLabels, bool rgb)
+{
+    Q_UNUSED(rect);
+
+   
