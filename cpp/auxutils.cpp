@@ -244,4 +244,28 @@ QImage AuxUtils::drawBoxes(QImage image, QRect rect, QStringList captions, QList
 
         // Configure painter
         p.setRenderHint(QPainter::Antialiasing);
-        p.
+        p.setFont(font);
+
+        QFontMetrics fm(font);
+
+        // Draw each box
+        for(int i=0;i<boxes.count();i++)
+        {
+            // Check min confidence value and active label
+            if (confidences[i] >= minConfidence && activeLabels[captions[i]])
+            {               
+                // Draw box
+                cm.setRgb(rgb);
+                pen.setColor(cm.getColor(captions[i]));
+                p.setPen(pen);
+                p.setBrush(brush);
+                p.drawRect(boxes[i]);
+
+                // Format text               
+                QString confVal = QString::number(qRound(confidences[i] * 100)) + " %";
+                QString text    = captions[i] + " - " + confVal;
+
+                // Text rect
+                int width  = fm.width(text)+FONT_WIDTH_MARGIN;
+                int height = fm.height();
+        
