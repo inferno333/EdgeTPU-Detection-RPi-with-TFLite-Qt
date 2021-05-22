@@ -289,3 +289,41 @@ QImage AuxUtils::drawBoxes(QImage image, QRect rect, QStringList captions, QList
         }
     }
 
+    return image;
+}
+
+QVector<int> AuxUtils::histogram(QImage img)
+{
+    QVector<int> h;
+
+    QImage img_gray = img.convertToFormat(QImage::Format_Grayscale8);
+
+    for(int i=0;i<=MAX_INTENSITY;i++)
+        h.append(0);
+
+    for(int i=0;i<img_gray.width();i++)
+        for(int j=0;j<img_gray.height();j++)
+            h[qGray(img_gray.pixel(i,j))]++;
+
+    return h;
+}
+
+QImage AuxUtils::segmentation(QImage img, QVector<int> histogram, QColor color, int manual_threshold)
+{
+    int q1=0;
+    int q2=0;
+    int sum=0;
+    int sumB=0;
+    int threshold=0;
+    double mu1=0;
+    double mu2=0;
+    double sigma=0;
+    double var_max=0;
+    int N=img.width()*img.height();
+    QImage img_out = img.copy();
+
+    if (manual_threshold<0 || manual_threshold>MAX_INTENSITY)
+    {
+
+        for(unsigned i=0;i<=MAX_INTENSITY;i++)
+            sum += i
