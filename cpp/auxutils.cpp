@@ -268,4 +268,24 @@ QImage AuxUtils::drawBoxes(QImage image, QRect rect, QStringList captions, QList
                 // Text rect
                 int width  = fm.width(text)+FONT_WIDTH_MARGIN;
                 int height = fm.height();
-        
+                int left   = boxes[i].left()>=0 ? int(boxes[i].left()) : int(boxes[i].right()-width);
+                int top    = boxes[i].top()-fm.height()>=0 ? int(boxes[i].top()-fm.height()) : int(boxes[i].bottom());
+
+                // Text position
+                int tLeft = left+FONT_WIDTH_MARGIN/2;
+                int tTop  = boxes[i].top()-fm.height()>=0 ? int(boxes[i].top() - FONT_HEIGHT_MARGIN) : int(boxes[i].bottom() + height - FONT_HEIGHT_MARGIN);
+
+                // Draw text background
+                bPen.setColor(pen.color());
+                bBrush.setColor(pen.color());
+                p.setPen(bPen);
+                p.setBrush(bBrush);
+                p.drawRect(left,top,width,height);
+
+                // Draw tex
+                p.setPen(fPen);
+                p.drawText(tLeft,tTop,text);
+            }
+        }
+    }
+
