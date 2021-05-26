@@ -326,4 +326,36 @@ QImage AuxUtils::segmentation(QImage img, QVector<int> histogram, QColor color, 
     {
 
         for(unsigned i=0;i<=MAX_INTENSITY;i++)
-            sum += i
+            sum += i*histogram[i];
+
+        for(unsigned i=0;i<=MAX_INTENSITY;i++)
+        {
+            q1 += histogram[i];
+            if (q1 == 0) continue;
+            q2 = N - q1;
+            if (q2 <= 0) continue;
+            sumB += i*histogram[i];
+            mu1 = sumB/q1;
+            mu2 = (sum - sumB)/q2;
+            sigma = q1*q2*pow(mu1-mu2,2);
+
+            if (sigma>var_max)
+            {
+                threshold = i;
+                var_max = sigma;
+            }
+        }
+    }
+    else
+    {
+        threshold = manual_threshold;
+    }
+
+    QImage img_gray = img.convertToFormat(QImage::Format_Grayscale8);
+
+    for(int i=0;i<img_out.width();i++)
+        for(int j=0;j<img_out.height();j++)
+            if (qGray(img_gray.pixel(i,j))>threshold)
+                img_out.setPixelColor(i,j,Qt::transparent);
+            else
+                img_out.setPixelColor(i,j,color)
