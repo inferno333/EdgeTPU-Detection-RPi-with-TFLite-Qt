@@ -358,4 +358,40 @@ QImage AuxUtils::segmentation(QImage img, QVector<int> histogram, QColor color, 
             if (qGray(img_gray.pixel(i,j))>threshold)
                 img_out.setPixelColor(i,j,Qt::transparent);
             else
-                img_out.setPixelColor(i,j,color)
+                img_out.setPixelColor(i,j,color);
+
+    return img_out;
+}
+
+QString AuxUtils::getDefaultModelFilename()
+{
+    return assetsPath + QDir::separator() + modelName;
+}
+
+QString AuxUtils::getDefaultLabelsFilename()
+{
+    return assetsPath + QDir::separator() + labelsName;
+}
+
+QRectF AuxUtils::frameMatchImg(QImage img, QSize rectSize)
+{
+    QSize isize   = img.size();
+    rectSize.scale(isize, Qt::KeepAspectRatio);
+    QPoint center = img.rect().center();
+
+    return QRectF(center.x()-rectSize.width()*0.5,center.y()-rectSize.height()*0.5,rectSize.width(),rectSize.height());
+}
+
+bool AuxUtils::readLabels(QString filename)
+{
+    if (!filename.trimmed().isEmpty())
+    {
+        QFile textFile(filename);
+
+        if (textFile.exists())
+        {
+            QByteArray line;
+
+            textFile.open(QIODevice::ReadOnly);
+
+            line = textFile.readLine
