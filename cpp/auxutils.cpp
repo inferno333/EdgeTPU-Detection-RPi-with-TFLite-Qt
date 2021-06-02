@@ -444,4 +444,26 @@ QVariantList AuxUtils::networkInterfaces()
             QString info;
 
             info = interface.humanReadableName() + " (" + interface.name() + ") - " +  interface.hardwareAddress() + " - " +
-                   (interface.addressEntries().count()>0 ? interface.addressEntries().first()
+                   (interface.addressEntries().count()>0 ? interface.addressEntries().first().ip().toString() : "None");
+
+            list << info;
+        }
+    }
+
+    return list;
+}
+
+void AuxUtils::setAngleHor(double angle) { AuxUtils::angleHor = angle;}
+void AuxUtils::setAngleVer(double angle) { AuxUtils::angleVer = angle;}
+
+bool AuxUtils::setResolution(QString res)
+{
+    QStringList sRes = res.split(RES_CHAR);
+
+    if (sRes.count()>1)
+    {
+        width  = sRes[0].toInt();
+        height = sRes[1].toInt();
+    }
+    return false;
+}
