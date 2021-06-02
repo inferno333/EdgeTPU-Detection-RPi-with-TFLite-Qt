@@ -394,4 +394,32 @@ bool AuxUtils::readLabels(QString filename)
 
             textFile.open(QIODevice::ReadOnly);
 
-            line = textFile.readLine
+            line = textFile.readLine().trimmed();
+            while(!line.isEmpty()) // !textFile.atEnd() &&
+            {
+                labels.append(line);
+                line = textFile.readLine().trimmed();
+            }
+
+            textFile.close();
+            if (labels.count()>0) labels.removeFirst();
+            return true;
+        }
+    }
+    return false;
+}
+
+QStringList AuxUtils::getLabels()
+{
+    if (labels.isEmpty()) readLabels(AuxUtils::getDefaultLabelsFilename());
+
+    return labels;
+}
+
+bool AuxUtils::isBGRvideoFrame(QVideoFrame f)
+{
+    return f.pixelFormat() == QVideoFrame::Format_BGRA32 ||
+           f.pixelFormat() == QVideoFrame::Format_BGRA32_Premultiplied ||
+           f.pixelFormat() == QVideoFrame::Format_BGR32  ||
+           f.pixelFormat() == QVideoFrame::Format_BGR24  ||
+           f.pixelFormat() ==
