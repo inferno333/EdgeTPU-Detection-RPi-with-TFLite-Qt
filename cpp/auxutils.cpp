@@ -422,4 +422,26 @@ bool AuxUtils::isBGRvideoFrame(QVideoFrame f)
            f.pixelFormat() == QVideoFrame::Format_BGRA32_Premultiplied ||
            f.pixelFormat() == QVideoFrame::Format_BGR32  ||
            f.pixelFormat() == QVideoFrame::Format_BGR24  ||
-           f.pixelFormat() ==
+           f.pixelFormat() == QVideoFrame::Format_BGR565 ||
+           f.pixelFormat() == QVideoFrame::Format_BGR555 ||
+           f.pixelFormat() == QVideoFrame::Format_BGRA5658_Premultiplied;
+}
+
+bool AuxUtils::isBGRimage(QImage i)
+{
+    return i.format() == QImage::Format_BGR30  ||
+           i.format() == QImage::Format_A2BGR30_Premultiplied;
+}
+
+QVariantList AuxUtils::networkInterfaces()
+{
+    QVariantList list;
+
+    foreach(QNetworkInterface interface, QNetworkInterface::allInterfaces())
+    {
+        if (!(interface.flags() & QNetworkInterface::IsLoopBack))
+        {
+            QString info;
+
+            info = interface.humanReadableName() + " (" + interface.name() + ") - " +  interface.hardwareAddress() + " - " +
+                   (interface.addressEntries().count()>0 ? interface.addressEntries().first()
