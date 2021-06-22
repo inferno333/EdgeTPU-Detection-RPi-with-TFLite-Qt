@@ -143,4 +143,28 @@ class EdgeTpuManager {
       const std::unordered_map<std::string, std::string>& options) = 0;
 
   // Enumerates all connected Edge TPU devices.
-  virtual std::vector<DeviceEnumerationReco
+  virtual std::vector<DeviceEnumerationRecord> EnumerateEdgeTpu() const = 0;
+
+  // Sets verbosity of operating logs related to edge TPU.
+  // Verbosity level can be set to [0-10], in which 10 is the most verbose.
+  virtual TfLiteStatus SetVerbosity(int verbosity) = 0;
+
+  // Returns the version of EdgeTPU runtime stack.
+  virtual std::string Version() const = 0;
+
+ protected:
+  // No deletion for this singleton instance.
+  virtual ~EdgeTpuManager() = default;
+};
+
+// Returns pointer to an instance of TfLiteRegistration to handle
+// EdgeTPU custom ops, to be used with
+// tflite::ops::builtin::BuiltinOpResolver::AddCustom
+TfLiteRegistration* RegisterCustomOp();
+
+// Inserts name of device type into ostream. Returns the modified ostream.
+std::ostream& operator<<(std::ostream& out, DeviceType device_type);
+
+}  // namespace edgetpu
+
+#endif  // TFLITE_PUBLIC
