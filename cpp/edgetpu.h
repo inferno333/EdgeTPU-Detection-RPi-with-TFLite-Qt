@@ -125,4 +125,22 @@ class EdgeTpuManager {
   // all interpreters sharing this context are destroyed.
   virtual std::unique_ptr<EdgeTpuContext> NewEdgeTpuContext() = 0;
 
-  // Same as above, but the created context is associa
+  // Same as above, but the created context is associated with the specified
+  // type.
+  virtual std::unique_ptr<EdgeTpuContext> NewEdgeTpuContext(
+      DeviceType device_type) = 0;
+
+  // Same as above, but the created context is associated with the specified
+  // type and device path.
+  virtual std::unique_ptr<EdgeTpuContext> NewEdgeTpuContext(
+      DeviceType device_type, const std::string& device_path) = 0;
+
+  // Same as above, but the created context is associated with the given device
+  // type, path and options. Supported options are:
+  //  - "Performance": ["Low", "Medium", "High", "Max"]
+  virtual std::unique_ptr<EdgeTpuContext> NewEdgeTpuContext(
+      DeviceType device_type, const std::string& device_path,
+      const std::unordered_map<std::string, std::string>& options) = 0;
+
+  // Enumerates all connected Edge TPU devices.
+  virtual std::vector<DeviceEnumerationReco
