@@ -46,4 +46,24 @@ limitations under the License.
 //
 // Typical usage with Non-NNAPI:
 //
-//   //
+//   // Sets up the tpu_context.
+//   auto tpu_context =
+//       edgetpu::EdgeTpuManager::GetSingleton()->NewEdgeTpuContext();
+//
+//   std::unique_ptr<tflite::Interpreter> interpreter;
+//   tflite::ops::builtin::BuiltinOpResolver resolver;
+//   auto model =
+//   tflite::FlatBufferModel::BuildFromFile(model_file_name.c_str());
+//
+//   // Registers edge TPU custom op handler with Tflite resolver.
+//   resolver.AddCustom(edgetpu::kCustomOp, edgetpu::RegisterCustomOp());
+//
+//   tflite::InterpreterBuilder(*model, resolver)(&interpreter);
+//
+//   // Binds a context with a specific interpreter.
+//   interpreter->SetExternalContext(kTfLiteEdgeTpuContext,
+//     tpu_context.get());
+//
+//   // Note that all edge TPU context set ups should be done before this
+//   // function is called.
+//   interpreter-
