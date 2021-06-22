@@ -102,4 +102,27 @@ enum class DeviceType {
 // External context to be assigned through
 // tflite::Interpreter::SetExternalContext.
 class EdgeTpuContext : public TfLiteExternalContext {
- public
+ public:
+  virtual ~EdgeTpuContext() = 0;
+};
+
+// Singleton edge TPU manager for allocating new TPU contexts.
+class EdgeTpuManager {
+ public:
+  struct DeviceEnumerationRecord {
+    DeviceType type;
+    std::string path;
+  };
+
+  // Returns pointer to the singleton object, or nullptr if not supported on
+  // this platform.
+  static EdgeTpuManager* GetSingleton();
+
+  // Creates a new Edge TPU context to be assigned to Tflite::Interpreter. The
+  // Edge TPU context is associated with the default TPU device. May be null
+  // if underlying device cannot be found or open. Caller owns the returned new
+  // context and should destroy the context either implicity or explicitly after
+  // all interpreters sharing this context are destroyed.
+  virtual std::unique_ptr<EdgeTpuContext> NewEdgeTpuContext() = 0;
+
+  // Same as above, but the created context is associa
