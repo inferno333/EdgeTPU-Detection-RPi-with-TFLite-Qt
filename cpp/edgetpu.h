@@ -66,4 +66,40 @@ limitations under the License.
 //
 //   // Note that all edge TPU context set ups should be done before this
 //   // function is called.
-//   interpreter-
+//   interpreter->AllocateTensors();
+//      .... (Prepare input tensors)
+//   interpreter->Invoke();
+//      .... (retrieving the result from output tensors)
+//
+//   // Releases interpreter instance to free up resources associated with
+//   // this custom op.
+//   interpreter.reset();
+//
+//   // Closes the edge TPU.
+//   tpu_context.reset();
+
+#ifndef TFLITE_PUBLIC_EDGETPU_H_
+#define TFLITE_PUBLIC_EDGETPU_H_
+
+#include <cstdio>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include "tensorflow/lite/context.h"
+
+namespace edgetpu {
+
+// EdgeTPU custom op.
+static const char kCustomOp[] = "edgetpu-custom-op";
+
+enum class DeviceType {
+  kApexPci = 0,
+  kApexUsb = 1,
+};
+
+// External context to be assigned through
+// tflite::Interpreter::SetExternalContext.
+class EdgeTpuContext : public TfLiteExternalContext {
+ public
