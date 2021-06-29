@@ -167,4 +167,4 @@ std::ostream& operator<<(std::ostream& out, DeviceType device_type);
 
 }  // namespace edgetpu
 
-#endif  // TFLITE_PUBLIC
+#endif  // TFLITE_PUBLIC_EDGETPU_H_
