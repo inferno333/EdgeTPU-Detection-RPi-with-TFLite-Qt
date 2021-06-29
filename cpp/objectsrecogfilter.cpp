@@ -20,4 +20,41 @@ ObjectsRecogFilter::ObjectsRecogFilter()
     tf.setNumThreads(QThread::idealThreadCount());
 
     releaseRunning();
-    initialized = f
+    initialized = false;
+}
+
+void ObjectsRecogFilter::init(int imgHeight, int imgWidth)
+{
+    initialized = tf.init(imgHeight,imgWidth);
+    tft.setTf(&tf);
+}
+
+void ObjectsRecogFilter::initInput(int imgHeight, int imgWidth)
+{
+    tf.initInput(imgHeight,imgWidth);
+}
+
+void ObjectsRecogFilter::TensorFlowExecution(QImage imgTF)
+{
+    tf.setAccelaration(getAcceleration());
+    tf.setNumThreads(getNThreads());
+    tft.run(imgTF);
+}
+
+void ObjectsRecogFilter::processResults(int network, QStringList res, QList<double> conf, QList<QRectF> boxes, QList<QImage> masks, int inftime)
+{
+    rfr->setResults(network,res,conf,boxes,masks,inftime);
+    releaseRunning();
+}
+
+void ObjectsRecogFilter::setCameraOrientation(double o)
+{
+    camOrientation = o;
+}
+
+void ObjectsRecogFilter::setVideoOrientation(double o)
+{
+    vidOrientation = o;
+}
+
+double Objec
