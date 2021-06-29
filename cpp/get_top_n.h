@@ -16,4 +16,23 @@ limitations under the License.
 #ifndef TENSORFLOW_CONTRIB_LITE_EXAMPLES_LABEL_IMAGE_GET_TOP_N_H
 #define TENSORFLOW_CONTRIB_LITE_EXAMPLES_LABEL_IMAGE_GET_TOP_N_H
 
-#include "tensorflow/lite/examples/label_image/get_top_n
+#include "tensorflow/lite/examples/label_image/get_top_n_impl.h"
+
+namespace tflite {
+namespace label_image {
+
+template <class T>
+void get_top_n(T* prediction, int prediction_size, size_t num_results,
+               float threshold, std::vector<std::pair<float, int>>* top_results,
+               bool input_floating);
+
+// explicit instantiation so that we can use them otherwhere
+template void get_top_n<uint8_t>(uint8_t*, int, size_t, float,
+                                 std::vector<std::pair<float, int>>*, bool);
+template void get_top_n<float>(float*, int, size_t, float,
+                               std::vector<std::pair<float, int>>*, bool);
+
+}  // namespace label_image
+}  // namespace tflite
+
+#endif  // TENSORFLOW_CONTRIB_LITE_EXAMPLES_LABEL_IMAGE_GET_TOP_N_H
