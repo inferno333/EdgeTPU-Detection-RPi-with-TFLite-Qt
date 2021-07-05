@@ -57,4 +57,56 @@ void ObjectsRecogFilter::setVideoOrientation(double o)
     vidOrientation = o;
 }
 
-double Objec
+double ObjectsRecogFilter::getCameraOrientation()
+{
+    return camOrientation;
+}
+
+double ObjectsRecogFilter::getVideoOrientation()
+{
+    return vidOrientation;
+}
+
+bool ObjectsRecogFilter::getRunning()
+{
+    QMutexLocker locker(&mutex);
+
+    bool val = running;
+    if (!val) setRunning(true);
+
+    return !val;
+}
+
+void ObjectsRecogFilter::setRunning(bool val)
+{
+    running = val;
+}
+
+bool ObjectsRecogFilter::getInitialized() const
+{
+    return initialized;
+}
+
+void ObjectsRecogFilter::setInitialized(bool value)
+{
+    initialized = value;
+}
+
+void ObjectsRecogFilter::releaseRunning()
+{
+    QMutexLocker locker(&mutex);
+
+    setRunning(false);
+}
+
+QSize ObjectsRecogFilter::getContentSize() const
+{
+    return videoSize;
+}
+
+void ObjectsRecogFilter::setContentSize(const QSize &value)
+{
+    videoSize = value;
+}
+
+bo
