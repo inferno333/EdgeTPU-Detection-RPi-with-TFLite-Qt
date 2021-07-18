@@ -156,4 +156,47 @@ ObjectsRecogFilterRunable::ObjectsRecogFilterRunable(ObjectsRecogFilter *filter,
     results    = res;
 }
 
-void ObjectsRecogFilterRunable::setRe
+void ObjectsRecogFilterRunable::setResults(int net, QStringList res, QList<double> conf, QList<QRectF> box, QList<QImage> mask, int inftime)
+{
+    network       = net;
+    results       = res;
+    confidence    = conf;
+    boxes         = box;
+    masks         = mask;
+    inferenceTime = inftime;
+}
+
+void ObjectsRecogFilter::setActiveLabel(QString key, bool value)
+{
+    activeLabels[key] = value;
+}
+
+QMap<QString,bool> ObjectsRecogFilter::getActiveLabels()
+{
+    return activeLabels;
+}
+
+bool ObjectsRecogFilter::getActiveLabel(QString key)
+{
+    return activeLabels.value(key,false);
+}
+
+double ObjectsRecogFilter::getAngle() const
+{
+    return ang;
+}
+
+void ObjectsRecogFilter::setAngle(const double value)
+{
+    ang = value;    
+    emit angleChanged();
+}
+
+double ObjectsRecogFilter::getImgHeight()
+{
+    return tf.getHeight();
+}
+
+double ObjectsRecogFilter::getImgWidth()
+{
+   
