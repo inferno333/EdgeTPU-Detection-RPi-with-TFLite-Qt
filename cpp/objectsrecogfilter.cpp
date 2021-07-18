@@ -199,4 +199,34 @@ double ObjectsRecogFilter::getImgHeight()
 
 double ObjectsRecogFilter::getImgWidth()
 {
-   
+    return tf.getWidth();
+}
+
+QImage rotateImage(QImage img, double rotation)
+{
+    QPoint center = img.rect().center();
+    QMatrix matrix;
+    matrix.translate(center.x(), center.y());
+    matrix.rotate(rotation);
+
+    return img.transformed(matrix);
+}
+
+QVideoFrame ObjectsRecogFilterRunable::run(QVideoFrame *input, const QVideoSurfaceFormat &surfaceFormat, RunFlags flags)
+{
+    Q_UNUSED(surfaceFormat);
+    Q_UNUSED(flags);
+
+    QImage img;
+    bool mirrorHorizontal;
+    bool mirrorVertical = false;
+
+    if(input->isValid())
+    {       
+        // Get image from video frame, we need to convert it
+        // for unsupported QImage formats, i.e Format_YUV420P
+        //
+        // When input has an unsupported format the QImage
+        // default format is ARGB32
+        //
+        // NOTE: BGR im
