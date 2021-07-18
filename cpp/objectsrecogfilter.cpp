@@ -109,4 +109,51 @@ void ObjectsRecogFilter::setContentSize(const QSize &value)
     videoSize = value;
 }
 
-bo
+bool ObjectsRecogFilter::getAcceleration() const
+{
+    return acc;
+}
+
+void ObjectsRecogFilter::setAcceleration(bool value)
+{
+    acc = value;
+}
+
+int ObjectsRecogFilter::getNThreads() const
+{
+    return nThr;
+}
+
+void ObjectsRecogFilter::setNThreads(int value)
+{
+    nThr = value;
+}
+
+bool ObjectsRecogFilter::getShowInfTime() const
+{
+    return infTime;
+}
+
+void ObjectsRecogFilter::setShowInfTime(bool value)
+{
+    infTime = value;
+}
+
+double ObjectsRecogFilter::getMinConfidence() const
+{
+    return minConf;
+}
+
+void ObjectsRecogFilter::setMinConfidence(double value)
+{
+    minConf = value;
+    tf.setThreshold(minConf);
+}
+
+ObjectsRecogFilterRunable::ObjectsRecogFilterRunable(ObjectsRecogFilter *filter, QStringList res)
+{
+    m_filter   = filter;
+    results    = res;
+}
+
+void ObjectsRecogFilterRunable::setRe
