@@ -229,4 +229,20 @@ QVideoFrame ObjectsRecogFilterRunable::run(QVideoFrame *input, const QVideoSurfa
         // When input has an unsupported format the QImage
         // default format is ARGB32
         //
-        // NOTE: BGR im
+        // NOTE: BGR images are not properly managed by qt_imageFromVideoFrame
+        //
+        bool BGRVideoFrame = AuxUtils::isBGRvideoFrame(*input);
+        if (BGRVideoFrame)
+        {
+            input->map(QAbstractVideoBuffer::ReadOnly);
+            img = QImage(input->bits(),input->width(),input->height(),QImage::Format_ARGB32).copy();
+            input->unmap();
+            // WARNING: Mirror only for Android? How to check if this has to be done?
+            // surfaceFormat.isMirrored() == false for Android
+            mirrorVertical = true;
+        }
+        else img = qt_imageFromVideoFrame(*input);
+
+        // Check if mirroring is needed
+        if (!mirrorVertical) mirrorVertical = surfaceFormat.isMirrored();
+        mirrorHorizontal = surfaceFormat.scanLineDirection() == QVideoSurfaceFormat::Botto
