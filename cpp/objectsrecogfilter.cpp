@@ -284,4 +284,24 @@ QVideoFrame ObjectsRecogFilterRunable::run(QVideoFrame *input, const QVideoSurfa
 
 
                     // Content size
-       
+                    QRectF srcRect = AuxUtils::frameMatchImg(img,m_filter->getContentSize());
+
+                    // Text
+                    QString text = objStr + '\n' + confVal;
+
+                    // Show inference time
+                    if (m_filter->getShowInfTime())
+                        text = text + '\n' + QString::number(inferenceTime) + " ms";
+
+                    img = AuxUtils::drawText(img,srcRect,text);
+                }
+            }
+            // Object detection network
+            else if (network == TensorFlow::knOBJECT_DETECTION)
+            {
+                QRectF  srcRect;
+                bool    showInfTime  = m_filter->getShowInfTime();
+
+                // Calculate source rect if needed
+                if (showInfTime)
+                    srcRect = AuxUtils::frameMatchImg(img,m_filter->g
