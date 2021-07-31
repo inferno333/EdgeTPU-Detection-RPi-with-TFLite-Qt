@@ -245,4 +245,24 @@ QVideoFrame ObjectsRecogFilterRunable::run(QVideoFrame *input, const QVideoSurfa
 
         // Check if mirroring is needed
         if (!mirrorVertical) mirrorVertical = surfaceFormat.isMirrored();
-        mirrorHorizontal = surfaceFormat.scanLineDirection() == QVideoSurfaceFormat::Botto
+        mirrorHorizontal = surfaceFormat.scanLineDirection() == QVideoSurfaceFormat::BottomToTop;
+        img = img.mirrored(mirrorHorizontal,mirrorVertical);
+
+        // Check img is valid
+        if (img.format() != QImage::Format_Invalid)
+        {
+            // Take into account the rotation
+            img = rotateImage(img,-m_filter->getVideoOrientation());
+
+            // If not initialized, intialize with image size
+            if (!m_filter->getInitialized())
+                m_filter->init(img.height(),img.width());
+            else if (m_filter->getImgHeight() != img.height() ||
+                     m_filter->getImgWidth()  != img.width())
+                // If image size changed, initialize input tensor
+                m_filter->initInput(img.height(),img.width());
+
+            // Get a mutex for creating a thread to execute TensorFlow
+            if (m_filter->getRunning())
+            {
+                //img.save("/home/pi/im
