@@ -265,4 +265,23 @@ QVideoFrame ObjectsRecogFilterRunable::run(QVideoFrame *input, const QVideoSurfa
             // Get a mutex for creating a thread to execute TensorFlow
             if (m_filter->getRunning())
             {
-                //img.save("/home/pi/im
+                //img.save("/home/pi/imageTF.png");
+                emit m_filter->runTensorFlow(img);
+            }
+
+            // Image classification network
+            if (network == TensorFlow::knIMAGE_CLASSIFIER)
+            {
+                // Get current TensorFlow outputs
+                QString objStr = results.count()>0    ? results.first()    : "";
+                double  objCon = confidence.count()>0 ? confidence.first() : -1;
+
+                // Check if there are results, the label is active & the minimum confidence level is reached
+                if (objStr.length()>0 && objCon >= m_filter->getMinConfidence() && m_filter->getActiveLabel(objStr))
+                {
+                    // Formatting of confidence value
+                    QString confVal = QString::number(objCon * 100, 'f', 2) + " %";
+
+
+                    // Content size
+       
