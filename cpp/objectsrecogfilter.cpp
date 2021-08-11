@@ -324,4 +324,21 @@ QVideoFrame ObjectsRecogFilterRunable::run(QVideoFrame *input, const QVideoSurfa
             }
 
             // Restore rotation
-      
+            img = rotateImage(img,m_filter->getVideoOrientation());
+        }
+
+        // NOTE: for BGR images loaded as RGB
+        if (BGRVideoFrame) img = img.rgbSwapped();
+
+        // Return video frame from img
+        return  QVideoFrame(img);
+    }
+
+    return *input;
+}
+
+QVideoFilterRunnable *ObjectsRecogFilter::createFilterRunnable()
+{
+    rfr = new ObjectsRecogFilterRunable(this,tf.getResults());
+    return rfr;
+}
