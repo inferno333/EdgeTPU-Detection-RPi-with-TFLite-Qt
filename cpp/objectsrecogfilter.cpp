@@ -304,4 +304,24 @@ QVideoFrame ObjectsRecogFilterRunable::run(QVideoFrame *input, const QVideoSurfa
 
                 // Calculate source rect if needed
                 if (showInfTime)
-                    srcRect = AuxUtils::frameMatchImg(img,m_filter->g
+                    srcRect = AuxUtils::frameMatchImg(img,m_filter->getContentSize());
+
+                // Draw masks on image
+                if (!masks.isEmpty())
+                    img = AuxUtils::drawMasks(img,img.rect(),results,confidence,boxes,masks,m_filter->getMinConfidence(),m_filter->getActiveLabels());
+
+                // Draw boxes on image
+                img = AuxUtils::drawBoxes(img,img.rect(),results,confidence,boxes,m_filter->getMinConfidence(),
+                                          m_filter->getActiveLabels(),!BGRVideoFrame);
+
+                // Show inference time
+                if (showInfTime)
+                {
+                    QString text = QString::number(inferenceTime) + " ms";
+                    img = AuxUtils::drawText(img,srcRect,text);
+                }
+
+            }
+
+            // Restore rotation
+      
