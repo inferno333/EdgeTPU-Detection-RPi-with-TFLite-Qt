@@ -39,4 +39,27 @@ bool formatImageQt(T* out, QImage image, int image_channels, int wanted_height, 
     // Check same number of channels
     if (image_channels != wanted_channels)
     {
-        qDebug() << "ERROR: the image has" << image_channels << " channel
+        qDebug() << "ERROR: the image has" << image_channels << " channels. Wanted channels:" << wanted_channels;
+        return false;
+    }
+
+    // Scale image if needed
+    if (scale && (image.width() != wanted_width || image.height() != wanted_height))
+        image = image.scaled(wanted_height,wanted_width,Qt::IgnoreAspectRatio,Qt::FastTransformation);
+
+    // Number of pixels
+    const int numberPixels = image.height()*image.width()*wanted_channels;
+
+    // Pointer to image data
+    const uint8_t *output = image.bits();
+
+    // Boolean to [0,1]
+    const int inputFloat = input_floating ? 1 : 0;
+    const int inputInt   = input_floating ? 0 : 1;
+
+    // Transform to [0,128] ¿?
+    for (int i = 0; i < numberPixels; i++)
+    {
+      out[i] = inputFloat*((output[i] - input_mean) / input_std) + // inputFloat*(output[i]/ 128.f - 1.f) +
+               inputInt*(uint8_t)output[i];
+      //qDebug()
