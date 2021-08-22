@@ -62,4 +62,25 @@ bool formatImageQt(T* out, QImage image, int image_channels, int wanted_height, 
     {
       out[i] = inputFloat*((output[i] - input_mean) / input_std) + // inputFloat*(output[i]/ 128.f - 1.f) +
                inputInt*(uint8_t)output[i];
-      //qDebug()
+      //qDebug() << out[i];
+    }
+
+    return true;
+}
+
+// -----------------------------------------------------------------------------------------------------------------------
+// https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/lite/examples/label_image/bitmap_helpers_impl.h
+// -----------------------------------------------------------------------------------------------------------------------
+template <class T>
+void formatImageTFLite(T* out, const uint8_t* in, int image_height, int image_width, int image_channels, int wanted_height, int wanted_width, int wanted_channels, bool input_floating)
+{
+   const float input_mean = 127.5f;
+   const float input_std  = 127.5f;
+
+  int number_of_pixels = image_height * image_width * image_channels;
+  std::unique_ptr<Interpreter> interpreter(new Interpreter);
+
+  int base_index = 0;
+
+  // two inputs: input and new_sizes
+  inte
