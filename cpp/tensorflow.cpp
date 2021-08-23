@@ -100,4 +100,30 @@ void formatImageTFLite(T* out, const uint8_t* in, int image_height, int image_wi
 
   ops::builtin::BuiltinOpResolver resolver;
   const TfLiteRegistration *resize_op = resolver.FindOp(BuiltinOperator_RESIZE_BILINEAR,1);
-  auto* params = reinterpret_cast<TfLiteResizeBilinearParams*>(malloc(size
+  auto* params = reinterpret_cast<TfLiteResizeBilinearParams*>(malloc(sizeof(TfLiteResizeBilinearParams)));
+  params->align_corners = false;
+  interpreter->AddNodeWithParameters({0, 1}, {2}, nullptr, 0, params, resize_op, nullptr);
+  interpreter->AllocateTensors();
+
+
+  // fill input image
+  // in[] are integers, cannot do memcpy() directly
+  auto input = interpreter->typed_tensor<float>(0);
+  for (int i = 0; i < number_of_pixels; i++)
+    input[i] = in[i];
+
+  // fill new_sizes
+  interpreter->typed_tensor<int>(1)[0] = wanted_height;
+  interpreter->typed_tensor<int>(1)[1] = wanted_width;
+
+  interpreter->Invoke();
+
+  auto output = interpreter->typed_tensor<float>(2);
+  auto output_number_of_pixels = wanted_height * wanted_height * wanted_channels;
+
+  for (int i = 0; i < output_number_of_pixels; i++)
+  {
+    if (input_floating)
+      out[i] = (output[i] - input_mean) / input_std;
+    else
+      out[i] = (uint8_t)output[
