@@ -83,4 +83,21 @@ void formatImageTFLite(T* out, const uint8_t* in, int image_height, int image_wi
   int base_index = 0;
 
   // two inputs: input and new_sizes
-  inte
+  interpreter->AddTensors(2, &base_index);
+
+  // one output
+  interpreter->AddTensors(1, &base_index);
+
+  // set input and output tensors
+  interpreter->SetInputs({0, 1});
+  interpreter->SetOutputs({2});
+
+  // set parameters of tensors
+  TfLiteQuantizationParams quant;
+  interpreter->SetTensorParametersReadWrite(0, kTfLiteFloat32, "input",    {1, image_height, image_width, image_channels}, quant);
+  interpreter->SetTensorParametersReadWrite(1, kTfLiteInt32,   "new_size", {2},quant);
+  interpreter->SetTensorParametersReadWrite(2, kTfLiteFloat32, "output",   {1, wanted_height, wanted_width, wanted_channels}, quant);
+
+  ops::builtin::BuiltinOpResolver resolver;
+  const TfLiteRegistration *resize_op = resolver.FindOp(BuiltinOperator_RESIZE_BILINEAR,1);
+  auto* params = reinterpret_cast<TfLiteResizeBilinearParams*>(malloc(size
