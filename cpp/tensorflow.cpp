@@ -126,4 +126,27 @@ void formatImageTFLite(T* out, const uint8_t* in, int image_height, int image_wi
     if (input_floating)
       out[i] = (output[i] - input_mean) / input_std;
     else
-      out[i] = (uint8_t)output[
+      out[i] = (uint8_t)output[i];
+  }
+}
+bool TensorFlow::init(int imgHeight, int imgWidth)
+{
+    if (!initialized)
+        initialized = initTFLite(imgHeight,imgWidth);
+
+    return initialized;
+}
+
+void TensorFlow::initInput(int imgHeight, int imgWidth)
+{
+     Q_UNUSED(imgHeight);
+     Q_UNUSED(imgWidth);
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------
+// Adapted from: https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/lite/examples/label_image/label_image.cc
+// Adapted for TPU edge model from: https://coral.withgoogle.com/docs/edgetpu/api-cpp/
+// ------------------------------------------------------------------------------------------------------------------------------
+bool TensorFlow::initTFLite(int imgHeight, int imgWidth)
+{
+    Q_UNUSE
