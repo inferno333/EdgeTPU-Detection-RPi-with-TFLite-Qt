@@ -149,4 +149,29 @@ void TensorFlow::initInput(int imgHeight, int imgWidth)
 // ------------------------------------------------------------------------------------------------------------------------------
 bool TensorFlow::initTFLite(int imgHeight, int imgWidth)
 {
-    Q_UNUSE
+    Q_UNUSED(imgHeight);
+    Q_UNUSED(imgWidth);
+
+    try{
+        // Open model & assign error reporter
+        model = AuxUtils::getDefaultModelFilename().trimmed().isEmpty() && AuxUtils::getDefaultLabelsFilename().trimmed().isEmpty() ? nullptr :
+                FlatBufferModel::BuildFromFile(filename.toStdString().c_str(),&error_reporter);
+
+        edgetpu::EdgeTpuContext* edgetpu_context;
+
+        if(model == nullptr)
+        {
+            qDebug() << "TensorFlow model loading: ERROR";
+            return false;
+        }
+
+        // TPU support
+        if (getTPU())
+        {
+            edgetpu::EdgeTpuManager *edgetpu_manager = edgetpu::EdgeTpuManager::GetSingleton();
+
+            if (edgetpu_manager == nullptr)
+            {
+                qDebug() << "TPU unsupported on the current platform";
+                return false;
+     
