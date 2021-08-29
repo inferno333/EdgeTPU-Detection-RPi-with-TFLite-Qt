@@ -174,4 +174,23 @@ bool TensorFlow::initTFLite(int imgHeight, int imgWidth)
             {
                 qDebug() << "TPU unsupported on the current platform";
                 return false;
-     
+            }
+
+            //if (verbose)
+            //{
+            //    const auto& available_tpus = edgetpu::EdgeTpuManager::GetSingleton()->EnumerateEdgeTpu();
+            //    qDebug() << "Number of TPUs: " << available_tpus.size();
+            //    for(auto edgetpu : available_tpus)
+            //        qDebug() << "TPU:" << (edgetpu.type == edgetpu::DeviceType::kApexUsb ? "USB" : "PCI") << edgetpu.path.c_str();
+            //    qDebug() << "EdgeTPU runtime stack version: " << edgetpu_manager->Version().c_str();
+            //}
+
+            edgetpu_context = edgetpu_manager->NewEdgeTpuContext().release();
+
+            if (edgetpu_context == nullptr)
+            {
+                qDebug() << "TPU cannot be found or opened!";
+                return false;
+            }
+
+            edgetpu_manager->
