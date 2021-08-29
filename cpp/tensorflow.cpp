@@ -193,4 +193,32 @@ bool TensorFlow::initTFLite(int imgHeight, int imgWidth)
                 return false;
             }
 
-            edgetpu_manager->
+            edgetpu_manager->SetVerbosity(0);
+            resolver.AddCustom(edgetpu::kCustomOp, edgetpu::RegisterCustomOp());
+        }
+
+        // Link model & resolver
+        InterpreterBuilder builder(*model.get(), resolver);
+
+        // Check interpreter
+        if(builder(&interpreter) != kTfLiteOk)
+        {
+            qDebug() << "Interpreter: ERROR";
+            return false;
+        }
+
+        // TPU context
+        if (getTPU())
+            interpreter->SetExternalContext(kTfLiteEdgeTpuContext, edgetpu_context);
+
+        // Apply accelaration (Neural Network Android)
+        interpreter->UseNNAPI(accelaration);
+
+        if(interpreter->AllocateTensors() != kTfLiteOk)
+        {
+            qDebug() << "Allocate tensors: ERROR";
+            return false;
+        }
+
+        // Set kind of network
+        kind_network = interpreter->outputs().size()>1 ? knOBJECT_DETECTION : knIMA
