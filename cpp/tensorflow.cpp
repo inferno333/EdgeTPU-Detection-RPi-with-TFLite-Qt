@@ -221,4 +221,23 @@ bool TensorFlow::initTFLite(int imgHeight, int imgWidth)
         }
 
         // Set kind of network
-        kind_network = interpreter->outputs().size()>1 ? knOBJECT_DETECTION : knIMA
+        kind_network = interpreter->outputs().size()>1 ? knOBJECT_DETECTION : knIMAGE_CLASSIFIER;
+
+        if (verbose)
+        {
+          int i_size = interpreter->inputs().size();
+          int o_size = interpreter->outputs().size();
+          int t_size = interpreter->tensors_size();
+
+          qDebug() << "tensors size: "  << t_size;
+          qDebug() << "nodes size: "    << interpreter->nodes_size();
+          qDebug() << "inputs: "        << i_size;
+          qDebug() << "outputs: "       << o_size;
+
+          for (int i = 0; i < i_size; i++)
+            qDebug() << "input" << i << "name:" << interpreter->GetInputName(i) << ", type:" << interpreter->tensor(interpreter->inputs()[i])->type;
+
+          for (int i = 0; i < o_size; i++)
+            qDebug() << "output" << i << "name:" << interpreter->GetOutputName(i) << ", type:" << interpreter->tensor(interpreter->outputs()[i])->type;
+
+//          for (int i
