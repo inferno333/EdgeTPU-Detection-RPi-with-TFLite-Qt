@@ -240,4 +240,23 @@ bool TensorFlow::initTFLite(int imgHeight, int imgWidth)
           for (int i = 0; i < o_size; i++)
             qDebug() << "output" << i << "name:" << interpreter->GetOutputName(i) << ", type:" << interpreter->tensor(interpreter->outputs()[i])->type;
 
-//          for (int i
+//          for (int i = 0; i < t_size; i++)
+//          {
+//            if (interpreter->tensor(i)->name)
+//              qDebug()  << i << ":" << interpreter->tensor(i)->name << ","
+//                        << interpreter->tensor(i)->bytes << ","
+//                        << interpreter->tensor(i)->type << ","
+//                        << interpreter->tensor(i)->params.scale << ","
+//                        << interpreter->tensor(i)->params.zero_point;
+//          }
+        }
+
+        // Get input dimension from the input tensor metadata
+        // Assuming one input only
+        int input = interpreter->inputs()[0];
+        TfLiteIntArray* dims = interpreter->tensor(input)->dims;
+
+        // Save outputs
+        outputs.clear();
+        for(unsigned int i=0;i<interpreter->outputs().size();i++)
+            outputs.pu
