@@ -259,4 +259,34 @@ bool TensorFlow::initTFLite(int imgHeight, int imgWidth)
         // Save outputs
         outputs.clear();
         for(unsigned int i=0;i<interpreter->outputs().size();i++)
-            outputs.pu
+            outputs.push_back(interpreter->tensor(interpreter->outputs()[i]));
+
+        wanted_height   = dims->data[1];
+        wanted_width    = dims->data[2];
+        wanted_channels = dims->data[3];
+
+        if (verbose)
+        {
+            qDebug() << "Wanted height:"   << wanted_height;
+            qDebug() << "Wanted width:"    << wanted_width;
+            qDebug() << "Wanted channels:" << wanted_channels;
+        }
+
+        if (numThreads > 1)
+          interpreter->SetNumThreads(numThreads);
+
+        // Read labels
+        if (readLabels()) qDebug() << "There are" << labels.count() << "labels.";
+        else qDebug() << "There are NO labels";
+
+        qDebug() << "Tensorflow initialization: OK";
+        return true;
+
+    }catch(...)
+    {
+        qDebug() << "Exception loading model";
+        return false;
+    }
+}
+
+// --------------------------------------------------------------------------
