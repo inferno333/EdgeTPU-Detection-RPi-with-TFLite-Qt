@@ -311,4 +311,45 @@ float* TensorData(TfLiteTensor* tensor, int batch_index) {
 template<>
 uint8_t* TensorData(TfLiteTensor* tensor, int batch_index) {
     int nelems = 0;
-    for (int i = 1; i < tensor->dims->size; i++)
+    for (int i = 1; i < tensor->dims->size; i++) nelems *= tensor->dims->data[i];
+    switch (tensor->type) {
+        case kTfLiteUInt8:
+            return tensor->data.uint8 + nelems * batch_index;
+        default:
+            qDebug() << "Should not reach here!";
+    }
+    return nullptr;
+}
+
+int TensorFlow::getKindNetwork()
+{
+    return kind_network;
+}
+
+double TensorFlow::getThreshold() const
+{
+    return threshold;
+}
+
+void TensorFlow::setThreshold(double value)
+{
+    threshold = value;
+}
+
+bool TensorFlow::setInputs(QImage image)
+{
+    return setInputsTFLite(image);
+}
+
+bool TensorFlow::setInputsTFLite(QImage image)
+{
+    // Get inputs
+    std::vector<int> inputs = interpreter->inputs();
+
+    // Set inputs
+    for(unsigned int i=0;i<interpreter->inputs().size();i++)
+    {
+        int input = inputs[i];
+
+        // Convert input
+        switch (interpreter->tensor(input)->ty
