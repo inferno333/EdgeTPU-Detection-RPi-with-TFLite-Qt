@@ -352,4 +352,20 @@ bool TensorFlow::setInputsTFLite(QImage image)
         int input = inputs[i];
 
         // Convert input
-        switch (interpreter->tensor(input)->ty
+        switch (interpreter->tensor(input)->type)
+        {
+            case kTfLiteFloat32:
+            {
+                formatImageTFLite<float>(interpreter->typed_tensor<float>(input),image.bits(), image.height(),
+                                         image.width(), img_channels, wanted_height, wanted_width,wanted_channels, true);
+                //formatImageQt<float>(interpreter->typed_tensor<float>(input),image,img_channels,
+                //                     wanted_height,wanted_width,wanted_channels,true,true);
+                break;
+            }
+            case kTfLiteUInt8:
+            {
+                formatImageTFLite<uint8_t>(interpreter->typed_tensor<uint8_t>(input),image.bits(),
+                                           img_height, img_width, img_channels, wanted_height,
+                                           wanted_width, wanted_channels, false);
+
+                //form
