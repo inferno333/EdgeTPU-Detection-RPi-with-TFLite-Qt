@@ -404,4 +404,25 @@ bool TensorFlow::getClassfierOutputs(std::vector<std::pair<float, int>> *top_res
     //return getDeepLabOutputs();
 }
 
-bool TensorFlow::getClassfie
+bool TensorFlow::getClassfierOutputsTFLite(std::vector<std::pair<float, int>> *top_results)
+{
+    const int    output_size = 1000;
+    const size_t num_results = 5;
+
+    // Assume one output
+    if (interpreter->outputs().size()>0)
+    {
+        int output = interpreter->outputs()[0];
+
+        switch (interpreter->tensor(output)->type)
+        {
+            case kTfLiteFloat32:
+            {
+                tflite::label_image::get_top_n<float>(interpreter->typed_output_tensor<float>(0), output_size,
+                                                      num_results, threshold, top_results, true);
+                break;
+            }
+            case kTfLiteUInt8:
+            {
+                tflite::label_image::get_top_n<uint8_t>(interpreter->typed_output_tensor<uint8_t>(0),
+                                                        output_size, nu
