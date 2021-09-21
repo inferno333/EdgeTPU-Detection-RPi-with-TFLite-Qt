@@ -368,4 +368,40 @@ bool TensorFlow::setInputsTFLite(QImage image)
                                            img_height, img_width, img_channels, wanted_height,
                                            wanted_width, wanted_channels, false);
 
-                //form
+                //formatImageQt<uint8_t>(interpreter->typed_tensor<uint8_t>(input),image,img_channels,
+                //                       wanted_height,wanted_width,wanted_channels,false);
+                break;
+            }
+            default:
+            {
+                qDebug() << "Cannot handle input type" << interpreter->tensor(input)->type << "yet";
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool TensorFlow::inference()
+{
+    return inferenceTFLite();
+}
+
+bool TensorFlow::inferenceTFLite()
+{
+    // Invoke interpreter
+    if (interpreter->Invoke() != kTfLiteOk)
+    {
+        qDebug() << "Failed to invoke interpreter";
+        return false;
+    }
+    return true;
+}
+bool TensorFlow::getClassfierOutputs(std::vector<std::pair<float, int>> *top_results)
+{
+    return getClassfierOutputsTFLite(top_results);
+    //return getDeepLabOutputs();
+}
+
+bool TensorFlow::getClassfie
