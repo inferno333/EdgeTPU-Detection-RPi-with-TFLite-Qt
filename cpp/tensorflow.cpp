@@ -425,4 +425,29 @@ bool TensorFlow::getClassfierOutputsTFLite(std::vector<std::pair<float, int>> *t
             case kTfLiteUInt8:
             {
                 tflite::label_image::get_top_n<uint8_t>(interpreter->typed_output_tensor<uint8_t>(0),
-                                                        output_size, nu
+                                                        output_size, num_results, threshold, top_results,false);
+                break;
+            }
+            default:
+            {
+                qDebug() << "Cannot handle output type" << interpreter->tensor(output)->type << "yet";
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+bool TensorFlow::getDeepLabOutputs()
+{
+    const int nObjects = 21;
+
+    // Check one output
+    if (outputs.size()==1)
+    {
+        const float *data = TensorData<float>(outputs.front(), 0);
+        QImage image(wanted_width,wanted_height,QImage::Format_ARGB32);
+
+        const QStringList objects_names = {"background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair",
+                                           "cow"
