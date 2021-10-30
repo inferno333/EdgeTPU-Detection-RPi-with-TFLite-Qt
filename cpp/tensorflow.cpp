@@ -450,4 +450,19 @@ bool TensorFlow::getDeepLabOutputs()
         QImage image(wanted_width,wanted_height,QImage::Format_ARGB32);
 
         const QStringList objects_names = {"background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair",
-                                           "cow"
+                                           "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tv"};
+
+        const QColor background_color = Qt::transparent;
+        const QList<QColor> objects_colors = {background_color,Qt::gray,Qt::blue,Qt::green,Qt::yellow,Qt::lightGray,Qt::darkBlue,Qt::cyan,Qt::darkRed,Qt::darkYellow,
+                                              Qt::darkMagenta,Qt::darkCyan,Qt::white,Qt::darkGreen,Qt::darkGray,Qt::red,Qt::magenta,"#ffaa00","#662c91","#d943b4","#aaaa7f"};
+        const float object_alpha = 0.5;
+
+        image.fill(background_color);
+        for(int i=0;i<wanted_height;i++)
+        {
+            for(int j=0;j<wanted_width;j++)
+            {
+                int object_index = -1;
+                float max = 0;
+
+                for(int k=
