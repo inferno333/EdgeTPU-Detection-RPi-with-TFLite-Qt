@@ -465,4 +465,36 @@ bool TensorFlow::getDeepLabOutputs()
                 int object_index = -1;
                 float max = 0;
 
-                for(int k=
+                for(int k=0;k<nObjects;k++)
+                {
+                    const float value = data[i*wanted_width*nObjects + j*nObjects + k];
+                    if (value>max) {
+                        object_index = k;
+                        max = value;
+                    }
+                }
+                QColor color = objects_colors[object_index];
+                if (color != background_color) color.setAlphaF(object_alpha);
+                image.setPixelColor(j,i,color);
+            }
+        }
+        image.save("/home/javi/DeepLab_Test.png");
+        return true;
+    }
+    return false;
+}
+
+bool TensorFlow::getTPU() const
+{
+    return TPU;
+}
+
+void TensorFlow::setTPU(bool value)
+{
+    TPU = value;
+}
+
+
+bool TensorFlow::getObjectOutputs(QStringList &captions, QList<double> &confidences, QList<QRectF> &locations, QList<QImage> &images)
+{
+    return getObjectOutputsTFLite(
