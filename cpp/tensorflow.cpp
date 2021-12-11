@@ -514,4 +514,29 @@ bool TensorFlow::getObjectOutputsTFLite(QStringList &captions, QList<double> &co
         for (int i=0; i<num_detections; i++)
         {
             // Get class
-            const int cls = detect
+            const int cls = detection_classes[i] + 1;
+
+            // Ignore first one
+            if (cls == 0) continue;
+
+            // Get score
+            float score = detection_scores[i];
+
+            // Check minimum score
+            if (score < getThreshold()) break;
+
+            // Get class label
+            const QString label = getLabel(cls);
+
+            // Get coordinates
+            const float top    = detection_boxes[4 * i]     * img_height;
+            const float left   = detection_boxes[4 * i + 1] * img_width;
+            const float bottom = detection_boxes[4 * i + 2] * img_height;
+            const float right  = detection_boxes[4 * i + 3] * img_width;
+
+            // Save coordinates
+            QRectF box(left,top,right-left,bottom-top);
+
+            // Get masks
+            // WARNING: Under development
+            // https://github.com/matterpo
