@@ -497,4 +497,21 @@ void TensorFlow::setTPU(bool value)
 
 bool TensorFlow::getObjectOutputs(QStringList &captions, QList<double> &confidences, QList<QRectF> &locations, QList<QImage> &images)
 {
-    return getObjectOutputsTFLite(
+    return getObjectOutputsTFLite(captions,confidences,locations,images);
+}
+
+bool TensorFlow::getObjectOutputsTFLite(QStringList &captions, QList<double> &confidences, QList<QRectF> &locations, QList<QImage> &masks)
+{
+    if (outputs.size() >= 4)
+    {
+        const int    num_detections    = *TensorData<float>(outputs[3], 0);
+        const float* detection_classes =  TensorData<float>(outputs[1], 0);
+        const float* detection_scores  =  TensorData<float>(outputs[2], 0);
+        const float* detection_boxes   =  TensorData<float>(outputs[0], 0);
+        const float* detection_masks   =  !has_detection_masks || outputs.size()<5 ? nullptr : TensorData<float>(outputs[4], 0);
+        ColorManager cm;
+
+        for (int i=0; i<num_detections; i++)
+        {
+            // Get class
+            const int cls = detect
