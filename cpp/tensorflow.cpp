@@ -556,4 +556,27 @@ bool TensorFlow::getObjectOutputsTFLite(QStringList &captions, QList<double> &co
                 // https://chu24688.tian.yam.com/posts/44797337
                 //QImage maskScaled = ColorManager::billinearInterpolation(mask,box.height(),box.width());
 
-          
+                // Scale mask to box size
+                QImage maskScaled = mask.scaled(box.width(),box.height(),Qt::IgnoreAspectRatio,Qt::FastTransformation);
+
+                // Border detection
+                //QTransform trans(-1,0,1,-2,0,2,-1,0,1);
+                //maskScaled = ColorManager::applyTransformation(maskScaled,trans);
+
+                // Append to masks
+                masks.append(maskScaled);
+            }
+
+            // Save remaining data
+            captions.append(label);
+            confidences.append(score);
+            locations.append(box);
+        }
+
+        return true;
+    }
+    return false;
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// Adapted from: https://github.com/tensorflow/tensorflow/
