@@ -539,4 +539,21 @@ bool TensorFlow::getObjectOutputsTFLite(QStringList &captions, QList<double> &co
 
             // Get masks
             // WARNING: Under development
-            // https://github.com/matterpo
+            // https://github.com/matterport/Mask_RCNN/issues/222
+            if (detection_masks != nullptr)
+            {
+                const int dim1 = outputs[4]->dims->data[2];
+                const int dim2 = outputs[4]->dims->data[3];
+                QImage mask(dim1,dim2,QImage::Format_ARGB32_Premultiplied);
+
+                // Set binary mask [dim1,dim2]
+                for(int j=0;j<mask.height();j++)
+                    for(int k=0;k<mask.width();k++)
+                        mask.setPixel(k,j,detection_masks[i*dim1*dim2 + j*dim2 + k]>= MASK_THRESHOLD ?
+                                      cm.getColor(label).rgba() : QColor(Qt::transparent).rgba());
+
+                // Billinear interpolation
+                // https://chu24688.tian.yam.com/posts/44797337
+                //QImage maskScaled = ColorManager::billinearInterpolation(mask,box.height(),box.width());
+
+          
