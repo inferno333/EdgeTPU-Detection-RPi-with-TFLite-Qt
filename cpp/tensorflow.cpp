@@ -579,4 +579,31 @@ bool TensorFlow::getObjectOutputsTFLite(QStringList &captions, QList<double> &co
 }
 
 // ---------------------------------------------------------------------------------------------------------------
-// Adapted from: https://github.com/tensorflow/tensorflow/
+// Adapted from: https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite/examples/label_image
+// ---------------------------------------------------------------------------------------------------------------
+bool TensorFlow::run(QImage img)
+{
+    QElapsedTimer timer;
+
+    if (initialized)
+    {
+        // Start timer
+        //timer.start();
+
+        // Transform image format & copy data
+        QImage image = img.format() == format ? img : img.convertToFormat(format);
+
+        // Store original image properties
+        img_width    = image.width();
+        img_height   = image.height();
+        img_channels = numChannels;
+
+        // Set inputs
+        if (!setInputs(image)) return false;
+
+        // Perform inference
+        timer.start();
+        if (!inference()) return false;
+        inferenceTime = timer.elapsed();
+
+        // -
