@@ -630,4 +630,40 @@ bool TensorFlow::run(QImage img)
         }
         // Object detection
         else if (kind_network == knOBJECT_DETECTION)
-        
+        {
+            if (!getObjectOutputs(rCaption,rConfidence,rBox,rMasks)) return false;
+        }
+
+        //inferenceTime = timer.elapsed();
+        if (verbose) qDebug() << "Elapsed time: " << inferenceTime << "milliseconds";
+
+        return true;
+    }
+
+    return false;
+}
+
+// WARNING: function repeated in AuxUtils
+bool TensorFlow::readLabels()
+{   
+    if (!labelsFilename.trimmed().isEmpty())
+    {
+        QFile textFile(labelsFilename);
+
+        if (textFile.exists())
+        {
+            QByteArray line;
+
+            labels.clear();
+            textFile.open(QIODevice::ReadOnly);
+
+            line = textFile.readLine().trimmed();
+            while(!line.isEmpty()) // !textFile.atEnd() &&
+            {
+                labels.append(line);
+                line = textFile.readLine().trimmed();
+            }
+
+            textFile.close();
+        }
+        return 
