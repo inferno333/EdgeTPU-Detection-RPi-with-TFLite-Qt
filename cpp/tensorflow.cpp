@@ -606,4 +606,28 @@ bool TensorFlow::run(QImage img)
         if (!inference()) return false;
         inferenceTime = timer.elapsed();
 
-        // -
+        // -------------------------------------
+        // Outputs depend on the kind of network
+        // -------------------------------------
+        rCaption.clear();
+        rConfidence.clear();
+        rBox.clear();
+        rMasks.clear();
+
+        // Image classifier
+        if (kind_network == knIMAGE_CLASSIFIER)
+        {
+            std::vector<std::pair<float, int>> top_results;
+
+            if (!getClassfierOutputs(&top_results)) return false;
+
+            for (const auto& result : top_results)
+            {
+                rConfidence.append(result.first);
+                rCaption.append(getLabel(result.second));
+                if (verbose) qDebug() << rConfidence.last() << ":" << rCaption.last();
+            }
+        }
+        // Object detection
+        else if (kind_network == knOBJECT_DETECTION)
+        
