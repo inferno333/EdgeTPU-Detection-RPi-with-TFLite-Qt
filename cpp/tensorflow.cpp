@@ -719,4 +719,65 @@ double TensorFlow::getResultConfidence(int index)
 
 bool TensorFlow::getAccelaration() const
 {
-    re
+    return accelaration;
+}
+
+void TensorFlow::setAccelaration(bool value)
+{
+    accelaration = value;
+}
+
+int TensorFlow::getNumThreads() const
+{
+    return numThreads;
+}
+
+void TensorFlow::setNumThreads(int value)
+{
+    numThreads = value;
+}
+
+int TensorFlow::getChannels() const
+{
+    return wanted_channels;
+}
+
+QString TensorFlow::getLabelsFilename() const
+{
+    return labelsFilename;
+}
+
+void TensorFlow::setLabelsFilename(const QString &value)
+{
+    labelsFilename = value;
+}
+
+int TensorFlow::getWidth() const
+{
+    return wanted_width;
+}
+
+int TensorFlow::getHeight() const
+{
+    return wanted_height;
+}
+
+bool TensorFlow::getVerbose() const
+{
+    return verbose;
+}
+
+void TensorFlow::setVerbose(bool value)
+{
+    verbose = value;
+}
+
+QString TensorFlow::getFilename() const
+{
+    return filename;
+}
+
+void TensorFlow::setFilename(const QString &value)
+{
+    filename = value;
+    filename = filename.repl
