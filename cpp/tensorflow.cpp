@@ -666,4 +666,57 @@ bool TensorFlow::readLabels()
 
             textFile.close();
         }
-        return 
+        return true;
+    }
+    return false;
+}
+
+QString TensorFlow::getLabel(int index)
+{
+    if(index>=0 && index<labels.count())
+        return labels[index];
+    return "";
+}
+
+QString TensorFlow::getResultCaption(int index)
+{
+    if (index>=0 && index<rCaption.count())
+        return rCaption[index];
+    return "";
+}
+
+QStringList TensorFlow::getResults()
+{
+    return rCaption;
+}
+
+QList<double> TensorFlow::getConfidence()
+{
+    return rConfidence;
+}
+
+QList<QRectF> TensorFlow::getBoxes()
+{
+    return rBox;
+}
+
+QList<QImage> TensorFlow::getMasks()
+{
+    return rMasks;
+}
+
+int TensorFlow::getInferenceTime()
+{
+    return inferenceTime;
+}
+
+double TensorFlow::getResultConfidence(int index)
+{
+    if (index>=0 && index<rConfidence.count())
+        return rConfidence[index];
+    return -1;
+}
+
+bool TensorFlow::getAccelaration() const
+{
+    re
