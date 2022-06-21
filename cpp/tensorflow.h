@@ -31,4 +31,29 @@ public slots:
     bool run(QImage img);
     QString getFilename() const;
     void setFilename(const QString &value);
-    QS
+    QString getLabelsFilename() const;
+    void setLabelsFilename(const QString &value);
+    bool getAccelaration() const;
+    void setAccelaration(bool value);
+    bool getVerbose() const;
+    void setVerbose(bool value);
+    int getNumThreads() const;
+    void setNumThreads(int value);
+    int getHeight() const;
+    int getWidth() const;
+    int getChannels() const;
+    QString getLabel(int index);
+    QString getResultCaption(int index);
+    double  getResultConfidence(int index);
+    QStringList getResults();
+    QList<double> getConfidence();
+    QList<QRectF> getBoxes();
+    QList<QImage> getMasks();
+    int getInferenceTime();
+    int getKindNetwork();
+    double getThreshold() const;
+    void setThreshold(double value);
+    void initInput(int imgHeight, int imgWidth);
+    bool initTFLite(int imgHeight, int imgWidth);
+    bool setInputsTFLite(QImage image);
+    bool 
