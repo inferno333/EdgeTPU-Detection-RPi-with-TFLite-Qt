@@ -780,4 +780,5 @@ QString TensorFlow::getFilename() const
 void TensorFlow::setFilename(const QString &value)
 {
     filename = value;
-    filename = filename.repl
+    filename = filename.replace("file://","");
+}
