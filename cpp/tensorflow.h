@@ -56,4 +56,29 @@ public slots:
     void initInput(int imgHeight, int imgWidth);
     bool initTFLite(int imgHeight, int imgWidth);
     bool setInputsTFLite(QImage image);
-    bool 
+    bool inferenceTFLite();
+    bool getClassfierOutputsTFLite(std::vector<std::pair<float, int>> *top_results);
+    bool getObjectOutputsTFLite(QStringList &captions, QList<double> &confidences, QList<QRectF> &locations, QList<QImage> &masks);
+    bool getDeepLabOutputs();
+    bool getTPU() const;
+    void setTPU(bool value);
+
+private:
+    // Configuration constants
+    const double MASK_THRESHOLD = 0.3;
+
+    // Output names
+    const QString num_detections    = "num_detections";
+    const QString detection_classes = "detection_classes";
+    const QString detection_scores  = "detection_scores";
+    const QString detection_boxes   = "detection_boxes";
+    const QString detection_masks   = "detection_masks";
+
+    // Network configuration
+    bool has_detection_masks;
+
+    // Threshold
+    double threshold;
+
+    // Image properties
+    const QIma
