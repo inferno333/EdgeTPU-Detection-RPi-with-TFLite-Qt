@@ -81,4 +81,44 @@ private:
     double threshold;
 
     // Image properties
-    const QIma
+    const QImage::Format format = QImage::Format_RGB888;
+    const int numChannels = 3;
+
+    // Kind of network in model
+    int kind_network;
+
+    // Model filename
+    QString filename;
+
+    // Labels & box priors filename & data
+    QString labelsFilename;
+    QStringList labels;
+
+    // Results
+    QStringList   rCaption;
+    QList<double> rConfidence;
+    QList<QRectF> rBox;
+    QList<QImage> rMasks;
+    int inferenceTime;
+
+    // Initialized
+    bool initialized;
+
+    // Accelaration
+    bool accelaration;
+
+    // Verbose
+    bool verbose;
+
+    // Number of threads
+    int numThreads;
+
+    // TPU model
+    bool TPU;
+
+    // Image configuration
+    int wanted_height, wanted_width, wanted_channels;
+    int img_height, img_width, img_channels;
+
+    // Model
+    std::
