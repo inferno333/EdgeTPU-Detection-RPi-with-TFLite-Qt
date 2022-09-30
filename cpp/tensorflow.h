@@ -121,4 +121,22 @@ private:
     int img_height, img_width, img_channels;
 
     // Model
-    std::
+    std::unique_ptr<FlatBufferModel> model;
+    // Resolver
+    tflite::ops::builtin::BuiltinOpResolver resolver;
+    // Interpreter
+    std::unique_ptr<Interpreter> interpreter;
+    // Error reporter
+    StderrReporter error_reporter;
+    // Outputs
+    std::vector<TfLiteTensor*> outputs;
+
+    // Private functions
+    bool readLabels();
+    bool setInputs(QImage image);
+    bool inference();
+    bool getClassfierOutputs(std::vector<std::pair<float, int>> *top_results);
+    bool getObjectOutputs(QStringList &captions, QList<double> &confidences, QList<QRectF> &locations, QList<QImage> &images);
+};
+
+#endif // TENSORFLOW_H
