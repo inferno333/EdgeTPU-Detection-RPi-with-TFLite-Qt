@@ -63,4 +63,28 @@ TensorFlowThread::TensorFlowThread()
 {
     threadTF.setObjectName("TensorFlow thread");
     worker.moveToThread(&threadTF);
-    QObject::connect(&worker, SIGNAL(results(int,  QStringList, QList<double>, QList<QRectF>, QList<QImage>, int)), this, SLOT(propagateResults(int, QStringList, QList<double>, QList<QRe
+    QObject::connect(&worker, SIGNAL(results(int,  QStringList, QList<double>, QList<QRectF>, QList<QImage>, int)), this, SLOT(propagateResults(int, QStringList, QList<double>, QList<QRectF>,  QList<QImage>, int)));
+    QObject::connect(&worker, SIGNAL(numFrame(int)), this, SLOT(propagateNumFrame(int)));
+    QObject::connect(&worker, SIGNAL(numFrames(int)), this, SLOT(propagateNumFrames(int)));
+    QObject::connect(&worker, SIGNAL(finished()),  &threadTF, SLOT(quit()));
+    QObject::connect(&threadTF, SIGNAL(started()), &worker,   SLOT(work()));
+}
+
+void TensorFlowThread::setTf(TensorFlow *value)
+{
+    worker.setTf(value);
+}
+
+void TensorFlowThread::run(QImage imgTF)
+{    
+    worker.setImgTF(imgTF);
+    threadTF.start();
+}
+
+void TensorFlowThread::run(QString source, QString destination, bool showAim, bool showInfTime, QMap<QString,bool> activeLabels)
+{
+    worker.setVideoInfo(source,destination,showAim,showInfTime,activeLabels);
+    threadTF.start();
+}
+
+void TensorFlowT
