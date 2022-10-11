@@ -40,4 +40,27 @@ QImage WorkerTF::processImage(QImage img)
     QStringList   results       = tf->getResults();
     QList<double> confidence    = tf->getConfidence();
     QList<QRectF> boxes         = tf->getBoxes();
-    QList<QImag
+    QList<QImage> masks         = tf->getMasks();
+
+    // Draw masks on image
+    if (!masks.isEmpty())
+        img = AuxUtils::drawMasks(img,img.rect(),results,confidence,boxes,masks,minConf,activeLabels);
+
+    // Draw boxes on image
+    img = AuxUtils::drawBoxes(img,img.rect(),results,confidence,boxes,minConf,activeLabels,true);
+
+    // Show inference time
+    if (showInfTime)
+    {
+        QString text = QString::number(inferenceTime) + " ms";
+        img = AuxUtils::drawText(img,img.rect(),text);
+    }
+
+    return img;
+}
+
+TensorFlowThread::TensorFlowThread()
+{
+    threadTF.setObjectName("TensorFlow thread");
+    worker.moveToThread(&threadTF);
+    QObject::connect(&worker, SIGNAL(results(int,  QStringList, QList<double>, QList<QRectF>, QList<QImage>, int)), this, SLOT(propagateResults(int, QStringList, QList<double>, QList<QRe
