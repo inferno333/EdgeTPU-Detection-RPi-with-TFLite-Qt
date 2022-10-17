@@ -87,4 +87,17 @@ void TensorFlowThread::run(QString source, QString destination, bool showAim, bo
     threadTF.start();
 }
 
-void TensorFlowT
+void TensorFlowThread::propagateResults(int network, QStringList captions, QList<double> confidences, QList<QRectF> boxes, QList<QImage> masks, int infTime)
+{
+    emit results(network,captions,confidences,boxes,masks,infTime);
+}
+
+void TensorFlowThread::propagateNumFrame(int n)
+{
+    emit numFrame(n);
+}
+
+void TensorFlowThread::propagateNumFrames(int n)
+{
+    emit numFrames(n);
+}
