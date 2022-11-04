@@ -17,4 +17,23 @@ int    AuxUtils::height   = 0;
 
 using namespace tflite;
 
-int main(
+int main(int argc, char *argv[])
+{
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QGuiApplication app(argc, argv);
+    app.setOrganizationName("Mechatronics Blog");
+    app.setOrganizationDomain("mechatronicsblog.com");
+    app.setApplicationName("TFLite_Qt_Pi");
+
+    QQmlApplicationEngine engine;
+
+    // Register C++ QML types
+    qmlRegisterType<TensorFlow>("TensorFlow", 1, 0, "TensorFlow");
+    qmlRegisterType<ObjectsRecogFilter>("ObjectsRecognizer", 1, 0, "ObjectsRecognizer");
+    qmlRegisterType<AuxUtils>("AuxUtils", 1, 0, "AuxUtils");
+
+    // Global objects
+    AuxUtils* auxUtils = new AuxUtils();
+    engine.rootContext()->setContextProperty("auxUtils",auxUtils);
+    engine.rootContext()->setContextProper
