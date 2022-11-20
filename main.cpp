@@ -36,4 +36,15 @@ int main(int argc, char *argv[])
     // Global objects
     AuxUtils* auxUtils = new AuxUtils();
     engine.rootContext()->setContextProperty("auxUtils",auxUtils);
-    engine.rootContext()->setContextProper
+    engine.rootContext()->setContextProperty("globalEngine",&engine);
+
+    // Register meta types
+    qRegisterMetaType<QList<QRectF>>("QList<QRectF>");
+    qRegisterMetaType<QList<QImage>>("QList<QImage>");
+
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
+    return app.exec();
+}
